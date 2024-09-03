@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/formulario.dart';
+import 'package:flutter_application_1/resources/produto-resource.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Gerenciamento extends StatefulWidget {
@@ -12,7 +13,8 @@ class Gerenciamento extends StatefulWidget {
 }
 
 class _GerenciamentoState extends State<Gerenciamento> {
-  late SharedPreferences _prefs; // _prefs - armazenar e recuperar dados localmente no dispositivo
+  late SharedPreferences
+      _prefs; // _prefs - armazenar e recuperar dados localmente no dispositivo
   List itens = []; // Armazena os itens que serão exibidos na tela
   final TextEditingController _controller = TextEditingController();
 
@@ -22,7 +24,8 @@ class _GerenciamentoState extends State<Gerenciamento> {
     _controller.addListener(() {
       _carregamento();
     });
-    super.initState(); // Chama setUpParametros para configurar os parâmeteros iniciais da aplicação
+    super
+        .initState(); // Chama setUpParametros para configurar os parâmeteros iniciais da aplicação
   }
 
   @override
@@ -41,7 +44,7 @@ class _GerenciamentoState extends State<Gerenciamento> {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => FormularioPage(title: "formulario", item: item),
+        builder: (context) => FormularioPage(item: item),
       ),
     );
     _carregamento(); // Chama o método novamente para atualizar a lista de itens
@@ -51,7 +54,8 @@ class _GerenciamentoState extends State<Gerenciamento> {
     // Recupera os itens salvos no SharedPreferences
     var itensSTR = _prefs.getString('itens') ?? '[]'; // Como uma StringJSON
     setState(() {
-      itens = jsonDecode(itensSTR); // Decodifica a string para um objeto e atualiza a lista de itens
+      itens = jsonDecode(
+          itensSTR); // Decodifica a string para um objeto e atualiza a lista de itens
     });
   }
 
@@ -72,56 +76,55 @@ class _GerenciamentoState extends State<Gerenciamento> {
             },
             icon: const Icon(Icons.search),
           ),
+          IconButton(
+            onPressed: _irTelaForm,
+            tooltip: 'Adicionar',
+            icon: const Icon(Icons.add),
+          ),
         ],
       ),
       body: ListView(
-        children: itens.map((e) => Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10.0),
-          child: ListTile(
-            leading: Container(
-              width: 150,
-              height: 150,
-              child: Image.network(
-                e['imagem'],
-                fit: BoxFit.cover,
-              ),
-            ),
-            title: Text(e['nome']),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(e['descricao']),
-                Text(e['categoria']),
-              ],
-            ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  onPressed: () => edicao(e),
-                  icon: const Icon(Icons.edit),
-                ),
-                IconButton(
-                  onPressed: () => _deletar(e),
-                  icon: const Icon(Icons.delete),
-                ),
-              ],
-            ),
-            
-          ),
-        )).toList(),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _irTelaForm,
-        tooltip: 'Adicionar',
-        child: const Icon(Icons.add),
+        children: itens
+            .map((e) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: ListTile(
+                    leading: Container(
+                      width: 150,
+                      height: 150,
+                      child: Image.network(
+                        e['imagem'],
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    title: Text(e['nome']),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(e['descricao']),
+                        Text(e['categoria']),
+                      ],
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        //IconButton(
+                          //onPressed: () => edicao(e),
+                          //icon: const Icon(Icons.edit),
+                      //  ),
+                        IconButton(
+                          onPressed: () => _deletar(e),
+                          icon: const Icon(Icons.delete),
+                        ),
+                      ],
+                    ),
+                  ),
+                ))
+            .toList(),
       ),
     );
   }
 
-  void edicao(Map item) {
-    _irTelaForm(item: item); // Passa o item para edição na tela de formulário
-  }
+ 
 
   void _deletar(Map item) async {
     // Chamado quando o botao é prssionado
@@ -132,8 +135,10 @@ class _GerenciamentoState extends State<Gerenciamento> {
           title: const Text('Confirmação de Deleção'),
           content: const Text('Você deseja deletar este item?'),
           actions: [
+            
             TextButton(
-              onPressed: () => Navigator.pop(context, true), // True para deletar
+              onPressed: () =>
+                  Navigator.pop(context, true), // True para deletar
               child: Text('Deletar'),
             ),
             TextButton(
@@ -163,4 +168,3 @@ class _GerenciamentoState extends State<Gerenciamento> {
     }
   }
 }
-    

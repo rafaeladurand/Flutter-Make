@@ -4,16 +4,19 @@ import 'package:flutter_application_1/categoria_enum.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
+
 class FormularioPage extends StatefulWidget {
   //SW - Possui estado interno que pode ser modificado
-  final String title;
+  //final String title; required this.title
   final Map?
       item; // Mapa opicional -> pode conter dados para preenchimento do formulário(edição)
-  const FormularioPage({super.key, required this.title, this.item});
+  const FormularioPage({super.key, this.item});
+
 
   @override
   State<StatefulWidget> createState() => _FormularioPage();
 }
+
 
 class _FormularioPage extends State<FormularioPage> {
   late SharedPreferences
@@ -27,13 +30,16 @@ class _FormularioPage extends State<FormularioPage> {
   final _descricaoController =
       TextEditingController(); //Capturar o texto digitado no campo de descricao
 
+
   CategoriaEnum? _categoriaEnum;
+
 
   /*String? _mensagemValidacaoNome;
   String? _mensagemValidacaoImg;
   String? _mensagemValidacaoDescricao;
   String? _mensagemValidacaoCategoria;*/
   //Usados para armazenar mensagens de validacao para cada campo do formulário
+
 
   @override
   void initState() {
@@ -42,18 +48,22 @@ class _FormularioPage extends State<FormularioPage> {
     print(widget.item); // Imprimir conteudo no console para fins de debugging
   }
 
+
   void _validarFormulario() {
     final _formState = _formKey.currentState!;
+
 
     if (_formState.validate()) {
       final _nome = _nomeController.text;
       final _img = _imgController.text;
       final _descricao = _descricaoController.text;
 
+
       //print('Nome: $_nome');
       //print('Imagem: $_img');
       //print('Descrição: $_descricao');
       //rprint('Categoria: $_categoria');
+
 
       // _prefs.setString('nome', _nome);
       // _prefs.setString('imagem', _img);
@@ -79,6 +89,7 @@ class _FormularioPage extends State<FormularioPage> {
         mapJson['id'] = widget.item!['id'];
       }
 
+
       if (widget.item != null) {
         //Caso seja edição ele atualiza o id existente no mapa
         for (var i = 0; i < itens.length; i++) {
@@ -94,18 +105,21 @@ class _FormularioPage extends State<FormularioPage> {
       }
       _prefs.setString('itens', jsonEncode(itens));
 
+
       _formState.reset();
       _nomeController.clear();
       _imgController.clear();
       _descricaoController.clear();
 
+
       _voltarTelaHome();
     }
   }
-
+ 
   void _voltarTelaHome() {
     Navigator.pop(context);
   }
+
 
   Future<void> setUpParametros() async {
     _prefs = await SharedPreferences.getInstance();
@@ -119,11 +133,13 @@ class _FormularioPage extends State<FormularioPage> {
     }
   }
 
+
   String? _validarNome(String? valor) {
     if (valor == null || valor.isEmpty) {
       return 'O nome é obrigatório';
     }
   }
+
 
   String? _validarImg(String? valor) {
     if (valor == null || valor.isEmpty) {
@@ -135,17 +151,20 @@ class _FormularioPage extends State<FormularioPage> {
     }
   }
 
+
   String? _validarDescricao(String? valor) {
     if (valor == null || valor.isEmpty) {
       return 'A descrição é obrigatória';
     }
   }
 
+
   String? _validarCategoria(String? valor) {
     if (valor == null || valor.isEmpty) {
       return 'A categoria é obrigatória';
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

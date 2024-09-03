@@ -1,17 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_application_1/gerencia.dart';
 
 class ProductCard extends StatelessWidget {
-  const ProductCard({
-    Key? key,
-    required this.product,
-  }) : super(key: key);
-
   final Product product;
+  const ProductCard({Key? key, required this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var label = Text('Adicionar ao carrinho');
     return Card(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -19,17 +16,32 @@ class ProductCard extends StatelessWidget {
           Image.network(product.imageUrl),
           Text(product.name),
           Text('\$${product.price}'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              const SizedBox(height: 32.0),
+              ElevatedButton.icon(
+                onPressed: _adicionarCarrinho,
+                icon: Icon(Icons.add_shopping_cart),
+                label: label,
+              ),
+            ],
+          ),
         ],
       ),
     );
   }
 }
 
+void _adicionarCarrinho() {
+  
+}
+
 class Product {
   final String id;
   final String name;
   final String imageUrl;
-  final double price;
+  final String price;
 
   const Product({
     required this.id,
@@ -37,54 +49,40 @@ class Product {
     required this.imageUrl,
     required this.price,
   });
+
+  factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
+      id: json['id'],
+      name: json['nome'],
+      imageUrl: json['imagem'],
+      price: json['descricao'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'nome': name,
+      'imagem': imageUrl,
+      'price': price,
+    };
+  }
 }
 
 class MakeupGrid extends StatelessWidget {
-  const MakeupGrid({Key? key}) : super(key: key);
+  final List<Product> products;
+  const MakeupGrid({Key? key, required this.products}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final products = [
-      // Adicione seus produtos aqui
-      Product(
-        id: '1',
-        name: 'Batom Marrom',
-        imageUrl:
-            'https://www.marimariamakeup.com/arquivos/ids/164519-undefined-undefined/batom-stick-ginger-glow-true-tampa-laranja-mari-maria-makeup.png?v=638394602964630000',
-        price: 36.99,
-      ),
-      Product(
-        id: '2',
-        name: 'Ilumidador',
-        imageUrl:
-            'https://www.marimariamakeup.com/arquivos/ids/163635-undefined-undefined/iluminador-facial-aurora-embalagem-laranja-rosa-mari-maria-makeup.png?v=638258914850800000',
-        price: 39.99,
-      ),
-      Product(
-        id: '3',
-        name: 'Pincel',
-        imageUrl:
-            'https://www.marimariamakeup.com/arquivos/ids/164709-undefined-undefined/Pincel-maquiagem-cerdas-laranja-contorno-e-iluminacao-ginger-glow-Mari-Maria-Makeup.png?v=638403205694430000',
-        price: 79.99,
-      ),
-      Product(
-        id: '4',
-        name: 'Esponja',
-        imageUrl:
-            'https://www.marimariamakeup.com/arquivos/ids/164706-undefined-undefined/puffer-esponja-de-aplicacao-detalhes-mari-maria-make-up-frente.png?v=638403201632400000',
-        price: 10.00,
-      ),
-      // ...
-    ];
     return GridView.count(
       crossAxisCount: 3,
-      childAspectRatio: 0.7, // Adjust based on your desired image aspect ratio
-      padding: const EdgeInsets.all(8.0), // Add some padding around the grid
-      mainAxisSpacing: 10.0, // Space between rows
-      crossAxisSpacing: 5.0, // Space between columns
+      childAspectRatio: 0.7,
+      padding: const EdgeInsets.all(8.0),
+      mainAxisSpacing: 10.0,
+      crossAxisSpacing: 5.0,
       children:
           products.map((product) => ProductCard(product: product)).toList(),
     );
   }
-  
 }
